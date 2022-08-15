@@ -17,7 +17,7 @@ public class HealthCheckClient {
 
     public Boolean healthCheck() {
         HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(masterAddress+"/verification/verification-register/"))
+                .uri(URI.create(masterAddress+"/actuator/health"))
                 .timeout(Duration.ofMinutes(2))
                 .header("Content-Type", "application/json")
                 .build();
@@ -26,11 +26,9 @@ public class HealthCheckClient {
             HttpResponse<String> response = HttpClient.newBuilder()
                     .build()
                     .send(request, HttpResponse.BodyHandlers.ofString());
-            System.out.println(response.body());
-            System.out.println(response.statusCode());
-            return Boolean.valueOf(response.body());
+            return response.statusCode() == 200;
         } catch (IOException | InterruptedException e) {
-            return null;
+            return false;
         }
     }
 }
